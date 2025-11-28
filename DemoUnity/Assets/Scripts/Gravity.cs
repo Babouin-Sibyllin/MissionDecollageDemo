@@ -8,6 +8,29 @@ public class Gravity : MonoBehaviour
 
     public float gravityStrength = 9.81f;
 
+    public Material SpaceSkybox;
+
+    public Material EarthSkybox;
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && CompareTag("Space"))
+        {
+            RenderSettings.skybox = SpaceSkybox;
+            DynamicGI.UpdateEnvironment();
+            Debug.Log("espace");
+            gravityStrength = 0f;
+        }
+
+        if (other.CompareTag("Player") && CompareTag("Earth"))
+        {
+            RenderSettings.skybox = EarthSkybox;
+            DynamicGI.UpdateEnvironment();
+            Debug.Log("Terre");
+            gravityStrength = 9.81f;
+        }
+    }
+
     private void OnTriggerStay(Collider other)
     {
         Rigidbody rb = other.attachedRigidbody;
