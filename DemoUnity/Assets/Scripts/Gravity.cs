@@ -6,11 +6,13 @@ using UnityEngine;
 public class Gravity : MonoBehaviour
 {
 
-    public float gravityStrength = 9.81f;
+    public float gravityStrength = 35f;
 
     public Material SpaceSkybox;
 
     public Material EarthSkybox;
+
+    public Material MarsSkybox;
 
     void OnTriggerEnter(Collider other)
     {
@@ -28,6 +30,14 @@ public class Gravity : MonoBehaviour
             DynamicGI.UpdateEnvironment();
             Debug.Log("Terre");
             gravityStrength = 9.81f;
+        }
+
+        if (other.CompareTag("Player") && CompareTag("Mars"))
+        {
+            RenderSettings.skybox = MarsSkybox;
+            DynamicGI.UpdateEnvironment();
+            Debug.Log("Mars");
+            gravityStrength = -55.81f;
         }
     }
 
