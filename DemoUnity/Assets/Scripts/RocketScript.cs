@@ -83,13 +83,13 @@ public class RocketScript : MonoBehaviour
         
         rb.AddForce(transform.forward * MainValue, ForceMode.Acceleration);
         // se déplace à gauche
-        if (LeftValue > 0) {
-            rb.AddTorque(Vector3.forward * -LeftValue, ForceMode.Acceleration);
-        }
+        rb.AddTorque(Vector3.forward * -LeftValue, ForceMode.Acceleration);
+        rb.AddForce(transform.forward * LeftValue*10, ForceMode.Acceleration);
+        
         
         // se déplace à droite
         rb.AddTorque(Vector3.forward * RightValue, ForceMode.Acceleration);
-
+        rb.AddForce(transform.forward * RightValue*10, ForceMode.Acceleration);
         // se déplace sur les côtés
         rb.AddTorque(Vector3.forward * PivotValue, ForceMode.Acceleration);
 

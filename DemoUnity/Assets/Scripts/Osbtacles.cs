@@ -5,7 +5,7 @@ public class LoopingObstacle : MonoBehaviour
 {
     public Vector3 startPoint;   // Where the obstacle starts
     public Vector3 endPoint;     // Where the obstacle ends
-    public float speed = 5f;     // Movement speed
+    public float speed = 10f;     // Movement speed
 
     public GameObject Cube;
 
