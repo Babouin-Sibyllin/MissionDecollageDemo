@@ -37,6 +37,8 @@ public class RocketScript : MonoBehaviour
 
     public float SideReactorForce = 10f;
 
+    public float rotationSpeed = 90f;
+
     private Rigidbody rb;
 
     public LayerMask groundLayer;
@@ -79,18 +81,26 @@ public class RocketScript : MonoBehaviour
 
         Quaternion invertedRotation = Quaternion.Inverse(rb.transform.localRotation); // declare first
 
-if (!Gravity.MarsReached)
-{
-    // Use it in the "if" block
-    Camera.transform.localRotation = invertedRotation;
-}
-else
-{
-    // Use it in the "else" block
-    Vector3 euler = invertedRotation.eulerAngles;
-    euler.z = 90f; // or euler.y = 90f if you mean Y-axis
-    Camera.transform.localRotation = Quaternion.Euler(euler);
-}
+
+        Quaternion targetRotation;
+
+    if (!Gravity.MarsReached)
+    {
+        targetRotation = invertedRotation;
+    }
+    else
+    {
+        Vector3 euler = invertedRotation.eulerAngles;
+        euler.z = 90f; // or euler.y = 90f
+        targetRotation = Quaternion.Euler(euler);
+    }
+
+    // Smoothly rotate to the target
+    Camera.transform.localRotation = Quaternion.RotateTowards(
+        Camera.transform.localRotation,
+        targetRotation,
+        rotationSpeed * Time.deltaTime
+    );
         
 
         //avance vers le haut

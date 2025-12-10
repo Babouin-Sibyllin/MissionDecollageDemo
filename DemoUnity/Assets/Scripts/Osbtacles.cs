@@ -15,6 +15,9 @@ public class LoopingObstacle : MonoBehaviour
         float startX = Random.Range(-1000f, 1000f);
         float endX = Random.Range(-1000f, 1000f);
 
+        float startX2 = Random.Range(-1000f, 1000f);
+        float endX2 = Random.Range(-1000f, 1000f);
+
         // Keep Y and Z the same as the Cube's original position
         Vector3 basePos = Cube.transform.position;
 
@@ -29,10 +32,10 @@ public class LoopingObstacle : MonoBehaviour
     {
         Cube.transform.position += direction * speed * Time.deltaTime;
 
-        // If Cube reached or passed the end point
+        
         if (Vector3.Distance(Cube.transform.position, startPoint) >= Vector3.Distance(startPoint, endPoint))
         {
-            // Restart at a new random start point
+           
             float startX = Random.Range(-1000f, 1000f);
             float endX = Random.Range(-1000f, 1000f);
 
