@@ -31,11 +31,11 @@ public class RocketScript : MonoBehaviour
 
     public Slider PivotSlider;
 
-    public float MainReactorForce = 7f;
+    public float MainReactorForce = 4f;
 
-    public float BaseReactorForce = 15f;
+    public float BaseReactorForce = 10f;
 
-    public float SideReactorForce = 15f;
+    public float SideReactorForce = 10f;
 
     private Rigidbody rb;
 
@@ -45,12 +45,13 @@ public class RocketScript : MonoBehaviour
 
     [SerializeField] float torqueDamp = 0.98f;
 
+    public Gravity GravityScript;
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0f, -9.81f, 0f);
-
     }
 
     public static float Proportion(float value, float inputMin, float inputMax, float outputMin, float outputMax)
@@ -71,25 +72,38 @@ public class RocketScript : MonoBehaviour
 
 
 
-        float MainValue = Proportion(MainSlider.value, 0f, 1f, 0f, 22f);
+        float MainValue = Proportion(MainSlider.value, 0f, 1f, 0f, 9f);
         float RightValue = Proportion(RightSlider.value, 0f, 1f, 0f, 0.2f);
         float LeftValue = Proportion(LeftSlider.value, 0f, 1f, 0f, 0.2f);
         float PivotValue = Proportion(PivotSlider.value, 0f, 1f, -0.6f, 0.6f);
 
+        Quaternion invertedRotation = Quaternion.Inverse(rb.transform.localRotation); // declare first
 
-        Camera.transform.localRotation = Quaternion.Inverse(rb.transform.localRotation);
+if (!Gravity.MarsReached)
+{
+    // Use it in the "if" block
+    Camera.transform.localRotation = invertedRotation;
+}
+else
+{
+    // Use it in the "else" block
+    Vector3 euler = invertedRotation.eulerAngles;
+    euler.z = 90f; // or euler.y = 90f if you mean Y-axis
+    Camera.transform.localRotation = Quaternion.Euler(euler);
+}
+        
 
         //avance vers le haut
         
         rb.AddForce(transform.forward * MainValue, ForceMode.Acceleration);
         // se déplace à gauche
         rb.AddTorque(Vector3.forward * -LeftValue, ForceMode.Acceleration);
-        rb.AddForce(transform.forward * LeftValue*40, ForceMode.Acceleration);
+        rb.AddForce(transform.forward * LeftValue*13, ForceMode.Acceleration);
         
         
         // se déplace à droite
         rb.AddTorque(Vector3.forward * RightValue, ForceMode.Acceleration);
-        rb.AddForce(transform.forward * RightValue*40, ForceMode.Acceleration);
+        rb.AddForce(transform.forward * RightValue*13, ForceMode.Acceleration);
         // se déplace sur les côtés
         rb.AddTorque(Vector3.forward * PivotValue, ForceMode.Acceleration);
 
@@ -184,6 +198,6 @@ public class RocketScript : MonoBehaviour
 
     void Update()
     {
-
+        
     }
 }

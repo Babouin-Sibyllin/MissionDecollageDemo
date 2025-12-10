@@ -8,6 +8,7 @@ TagManager:
   - Earth
   - GameZone
   - Mars
+  - Obstacles
   layers:
   - Default
   - TransparentFX

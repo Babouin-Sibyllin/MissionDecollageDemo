@@ -14,6 +14,9 @@ public class Gravity : MonoBehaviour
 
     public Material MarsSkybox;
 
+    public static bool MarsReached = false;
+
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && CompareTag("Space"))
@@ -37,7 +40,8 @@ public class Gravity : MonoBehaviour
             RenderSettings.skybox = MarsSkybox;
             DynamicGI.UpdateEnvironment();
             Debug.Log("Mars");
-            gravityStrength = -55.81f;
+            gravityStrength = -9.81f;
+            MarsReached = true;
         }
     }
 
