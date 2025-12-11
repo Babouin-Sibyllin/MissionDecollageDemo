@@ -115,7 +115,7 @@ public class RocketScript : MonoBehaviour
         rb.AddTorque(Vector3.forward * RightValue, ForceMode.Acceleration);
         rb.AddForce(transform.forward * RightValue*13, ForceMode.Acceleration);
         // se déplace sur les côtés
-        rb.AddTorque(Vector3.forward * PivotValue, ForceMode.Acceleration);
+        
 
         if (MainValue > 0f)
             MainFire.Play();
@@ -127,21 +127,35 @@ public class RocketScript : MonoBehaviour
         else
             RightFire.Stop();
 
-        if (LeftValue > 0)
+        if (LeftValue > 0) {
             LeftFire.Play();
-        else
+            }  
+        else {
             LeftFire.Stop();
-
-        if (PivotValue > 0.2f) 
-            RightPivot.Play();
-        else 
-            RightPivot.Stop();
+        }
             
 
-        if (PivotValue < -0.2f) 
+        if (PivotValue > 0.2f) 
+        {
+            RightPivot.Play();
+            rb.AddTorque(Vector3.forward * PivotValue, ForceMode.Acceleration);
+        } 
+        else {
+            RightPivot.Stop();
+            rb.AddTorque(Vector3.forward * 0, ForceMode.Acceleration);
+            }
+            
+            
+
+        if (PivotValue < -0.2f) {
             LeftPivot.Play();
-        else 
+            rb.AddTorque(Vector3.forward * PivotValue, ForceMode.Acceleration);
+        }
+        else {
+            rb.AddTorque(Vector3.forward * 0, ForceMode.Acceleration);
             LeftPivot.Stop();
+            }
+            
 
         if (w)
         {

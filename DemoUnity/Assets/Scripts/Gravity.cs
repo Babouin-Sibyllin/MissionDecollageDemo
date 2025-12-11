@@ -51,17 +51,17 @@ public class Gravity : MonoBehaviour
 
         if (rb != null)
         {
-            // Apply custom gravity (downward)
+            
             rb.AddForce(Vector3.down * gravityStrength, ForceMode.Acceleration);
         }
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         

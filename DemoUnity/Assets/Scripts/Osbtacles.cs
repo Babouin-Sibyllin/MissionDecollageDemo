@@ -3,7 +3,11 @@ using UnityEngine;
 public class LoopingObstacle : MonoBehaviour
 {
     public float speed = 15f;
-    public GameObject Cube;
+    public GameObject obstaclePrefab;
+    public float extraDistance = 2000f;
+
+    public float extremeX = 2000f;   
+    public float spawnRangeX = 500f; 
 
     private Vector3 startPoint;
     private Vector3 endPoint;
@@ -11,39 +15,55 @@ public class LoopingObstacle : MonoBehaviour
 
     void Start()
     {
-        // Pick random X positions between -1000 and 1000
-        float startX = Random.Range(-1000f, 1000f);
-        float endX = Random.Range(-1000f, 1000f);
+        
+        Vector3 spawnPos = GetRandomSpawnPos(transform.position.y, transform.position.z);
+    transform.position = spawnPos;
 
-        float startX2 = Random.Range(-1000f, 1000f);
-        float endX2 = Random.Range(-1000f, 1000f);
-
-        // Keep Y and Z the same as the Cube's original position
-        Vector3 basePos = Cube.transform.position;
-
-        startPoint = new Vector3(startX, basePos.y, basePos.z);
-        endPoint   = new Vector3(endX, basePos.y, basePos.z);
-
-        Cube.transform.position = startPoint;
-        direction = (endPoint - startPoint).normalized;
+    GenerateNewPath(spawnPos);
     }
 
     void Update()
     {
-        Cube.transform.position += direction * speed * Time.deltaTime;
+        transform.position += direction * speed * Time.deltaTime;
+
+        float traveled = Vector3.Distance(transform.position, startPoint);
+        float pathLength = Vector3.Distance(startPoint, endPoint);
+
+        if (traveled >= pathLength)
+        {
+            
+            Vector3 newSpawnPos = GetRandomSpawnPos(startPoint.y, startPoint.z);
+            Instantiate(obstaclePrefab, newSpawnPos, Quaternion.identity);
+
+            
+            GenerateNewPath(endPoint);
+        }
+    }
+
+    void GenerateNewPath(Vector3 fromPosition)
+    {
+        startPoint = fromPosition;
 
         
-        if (Vector3.Distance(Cube.transform.position, startPoint) >= Vector3.Distance(startPoint, endPoint))
-        {
-           
-            float startX = Random.Range(-1000f, 1000f);
-            float endX = Random.Range(-1000f, 1000f);
+        Vector3 nextExtremity = GetRandomExtremityPos(fromPosition.y, fromPosition.z);
 
-            startPoint = new Vector3(startX, Cube.transform.position.y, Cube.transform.position.z);
-            endPoint   = new Vector3(endX, Cube.transform.position.y, Cube.transform.position.z);
+        endPoint = nextExtremity;
 
-            Cube.transform.position = startPoint;
-            direction = (endPoint - startPoint).normalized;
-        }
+        Vector3 extra = (endPoint - startPoint).normalized * extraDistance;
+        endPoint += extra;
+
+        direction = (endPoint - startPoint).normalized;
+    }
+
+    Vector3 GetRandomSpawnPos(float y, float z)
+    {
+        float x = Random.Range(-spawnRangeX, spawnRangeX);
+        return new Vector3(x, y, z);
+    }
+
+    Vector3 GetRandomExtremityPos(float y, float z)
+    {
+        float x = Random.value < 0.5f ? -extremeX : extremeX;
+        return new Vector3(x, y, z);
     }
 }

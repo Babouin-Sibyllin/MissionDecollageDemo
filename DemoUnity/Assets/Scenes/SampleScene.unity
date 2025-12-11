@@ -263,7 +263,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 25
-  Cube: {fileID: 800694470}
+  obstaclePrefab: {fileID: 800694470}
+  extraDistance: 2000
+  extremeX: 2000
+  spawnRangeX: 500
 --- !u!4 &34312869
 Transform:
   m_ObjectHideFlags: 0
@@ -631,7 +634,7 @@ RectTransform:
   m_GameObject: {fileID: 112694958}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.069865905, y: 0.069865905, z: 0.069865905}
+  m_LocalScale: {x: 0.08283302, y: 0.08283302, z: 0.08283302}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 256487232}
@@ -706,7 +709,7 @@ RectTransform:
   m_GameObject: {fileID: 129909349}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.069865905, y: 0.069865905, z: 0.069865905}
+  m_LocalScale: {x: 0.08283302, y: 0.08283302, z: 0.08283302}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 256487232}
@@ -800,7 +803,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
-  Cube: {fileID: 815583642}
+  obstaclePrefab: {fileID: 815583642}
+  extraDistance: 2000
+  extremeX: 2000
+  spawnRangeX: 500
 --- !u!1001 &147497640
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -879,6 +885,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Aeroplane_Smooth3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 72afacb0890fa8044a0866afd23ec93c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Obstacles
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -891,6 +902,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 800694477}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 72afacb0890fa8044a0866afd23ec93c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 800694480}
   m_SourcePrefab: {fileID: 100100000, guid: 72afacb0890fa8044a0866afd23ec93c, type: 3}
 --- !u!1 &157697081
 GameObject:
@@ -1045,6 +1060,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Aeroplane_Smooth4
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 72afacb0890fa8044a0866afd23ec93c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Obstacles
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1057,6 +1077,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 173339987}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 72afacb0890fa8044a0866afd23ec93c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 173339990}
   m_SourcePrefab: {fileID: 100100000, guid: 72afacb0890fa8044a0866afd23ec93c, type: 3}
 --- !u!4 &173339982 stripped
 Transform:
@@ -1085,7 +1109,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1101,6 +1125,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: defca431c92989e42a6130bc9fd5ecd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &173339990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173339983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8343adedb0083334a93bf833bf139fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &193827316
@@ -1308,7 +1344,6 @@ RectTransform:
   m_Children:
   - {fileID: 1586714956}
   - {fileID: 1850129762}
-  - {fileID: 1101456454}
   - {fileID: 1590441265}
   - {fileID: 390067665}
   - {fileID: 1630277522}
@@ -1316,6 +1351,7 @@ RectTransform:
   - {fileID: 112694959}
   - {fileID: 129909350}
   - {fileID: 1296476791}
+  - {fileID: 1101456454}
   m_Father: {fileID: 1782214300}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.4222179}
@@ -1639,7 +1675,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
-  Cube: {fileID: 1072548085}
+  obstaclePrefab: {fileID: 1072548085}
+  extraDistance: 2000
+  extremeX: 2000
+  spawnRangeX: 500
 --- !u!1 &343958461
 GameObject:
   m_ObjectHideFlags: 0
@@ -1777,8 +1816,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2aaf15c09e98e54486350780f4bb4d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
-  Cube: {fileID: 453335670}
+  speed: 100
+  obstaclePrefab: {fileID: 453335670}
+  extraDistance: 2000
+  extremeX: 2000
+  spawnRangeX: 500
 --- !u!1 &390067664
 GameObject:
   m_ObjectHideFlags: 0
@@ -1902,7 +1944,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
-  Cube: {fileID: 1416147028}
+  obstaclePrefab: {fileID: 1416147028}
+  extraDistance: 2000
+  extremeX: 2000
+  spawnRangeX: 500
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -2032,10 +2077,11 @@ GameObject:
   - component: {fileID: 453335671}
   - component: {fileID: 453335674}
   - component: {fileID: 453335673}
-  - component: {fileID: 453335672}
+  - component: {fileID: 453335675}
+  - component: {fileID: 453335676}
   m_Layer: 0
   m_Name: Asteroid3
-  m_TagString: Untagged
+  m_TagString: Obstacles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2055,27 +2101,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 355248052}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &453335672
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 453335670}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 0.99999994, z: 1}
-  m_Center: {x: -0.000000052154064, y: -0.0000009536743, z: -0.000000022351742}
 --- !u!23 &453335673
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2126,6 +2151,40 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 453335670}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!64 &453335675
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453335670}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &453335676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453335670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8343adedb0083334a93bf833bf139fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &556697427
 GameObject:
   m_ObjectHideFlags: 0
@@ -2493,6 +2552,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Aeroplane_Smooth1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 72afacb0890fa8044a0866afd23ec93c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Obstacles
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2505,6 +2569,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1215812909}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 72afacb0890fa8044a0866afd23ec93c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1215812912}
   m_SourcePrefab: {fileID: 100100000, guid: 72afacb0890fa8044a0866afd23ec93c, type: 3}
 --- !u!1 &800694470 stripped
 GameObject:
@@ -2527,7 +2595,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -2551,6 +2619,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: defca431c92989e42a6130bc9fd5ecd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &800694480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800694470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8343adedb0083334a93bf833bf139fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &815583642
 GameObject:
   m_ObjectHideFlags: 0
@@ -2562,10 +2642,11 @@ GameObject:
   - component: {fileID: 815583643}
   - component: {fileID: 815583646}
   - component: {fileID: 815583645}
-  - component: {fileID: 815583644}
+  - component: {fileID: 815583647}
+  - component: {fileID: 815583648}
   m_Layer: 0
   m_Name: Asteroid2
-  m_TagString: Untagged
+  m_TagString: Obstacles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2585,27 +2666,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 134792357}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &815583644
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 815583642}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 0.99999994, z: 1}
-  m_Center: {x: -0.000000052154064, y: -0.0000009536743, z: -0.000000022351742}
 --- !u!23 &815583645
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2656,6 +2716,40 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815583642}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!64 &815583647
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815583642}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &815583648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815583642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8343adedb0083334a93bf833bf139fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2843,7 +2937,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 22
-  Cube: {fileID: 173339983}
+  obstaclePrefab: {fileID: 173339983}
+  extraDistance: 2000
+  extremeX: 2000
+  spawnRangeX: 500
 --- !u!1 &935030607
 GameObject:
   m_ObjectHideFlags: 0
@@ -12742,9 +12839,10 @@ GameObject:
   - component: {fileID: 1072548089}
   - component: {fileID: 1072548088}
   - component: {fileID: 1072548090}
+  - component: {fileID: 1072548091}
   m_Layer: 0
   m_Name: Asteroid
-  m_TagString: Untagged
+  m_TagString: Obstacles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12814,8 +12912,8 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1072548085}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &1072548090
-BoxCollider:
+--- !u!64 &1072548090
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -12829,12 +12927,25 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 0.99999994, z: 1}
-  m_Center: {x: -0.000000052154064, y: -0.0000009536743, z: -0.000000022351742}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1072548091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072548085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8343adedb0083334a93bf833bf139fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1101456453
 GameObject:
   m_ObjectHideFlags: 0
@@ -17798,7 +17909,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -17814,6 +17925,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: defca431c92989e42a6130bc9fd5ecd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1215812912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215812902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8343adedb0083334a93bf833bf139fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1228171574
@@ -17933,7 +18056,7 @@ RectTransform:
   m_GameObject: {fileID: 1296476790}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.069865905, y: 0.069865905, z: 0.069865905}
+  m_LocalScale: {x: 0.10699541, y: 0.10699541, z: 0.10699541}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 256487232}
@@ -18317,6 +18440,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Aeroplane_Smooth2
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 72afacb0890fa8044a0866afd23ec93c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Obstacles
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18329,6 +18457,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1416147032}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 72afacb0890fa8044a0866afd23ec93c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1416147035}
   m_SourcePrefab: {fileID: 100100000, guid: 72afacb0890fa8044a0866afd23ec93c, type: 3}
 --- !u!4 &1416147027 stripped
 Transform:
@@ -18357,7 +18489,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -18373,6 +18505,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: defca431c92989e42a6130bc9fd5ecd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1416147035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416147028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8343adedb0083334a93bf833bf139fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1436232567
@@ -18519,6 +18663,7 @@ MonoBehaviour:
     dot: {fileID: 129909350}
   - worldObject: {fileID: 453335671}
     dot: {fileID: 1296476791}
+  dotPrefab: {fileID: 1590441265}
 --- !u!1 &1524002372
 GameObject:
   m_ObjectHideFlags: 0
@@ -24658,7 +24803,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  Cube: {fileID: 1215812902}
+  obstaclePrefab: {fileID: 1215812902}
+  extraDistance: 2000
+  extremeX: 2000
+  spawnRangeX: 500
 --- !u!4 &1988119400
 Transform:
   m_ObjectHideFlags: 0
