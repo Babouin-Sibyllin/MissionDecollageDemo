@@ -4,13 +4,26 @@ using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player") && CompareTag("Obstacles"))
-        {
-            Debug.Log("Explosion");
 
+
+    public Zones zone;
+
+    void OnTriggerEnter(Collider other)
+{
+
+    if (other.CompareTag("Player") && gameObject.CompareTag("Obstacles"))
+    {
+        Debug.Log("explosion");
+
+        if (zone != null)
+        {
+            zone.TriggerExplosion();
+        }
+        else
+        {
+            Debug.LogWarning("Zones reference not assigned in Inspector!");
         }
     }
+}
 }
 

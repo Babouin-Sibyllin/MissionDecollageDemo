@@ -95,7 +95,7 @@ public class RocketScript : MonoBehaviour
         targetRotation = Quaternion.Euler(euler);
     }
 
-    // Smoothly rotate to the target
+    
     Camera.transform.localRotation = Quaternion.RotateTowards(
         Camera.transform.localRotation,
         targetRotation,
