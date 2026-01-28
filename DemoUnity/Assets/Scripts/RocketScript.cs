@@ -84,16 +84,16 @@ public class RocketScript : MonoBehaviour
 
         Quaternion targetRotation;
 
-    if (!Gravity.MarsReached)
-    {
+    //if (!Gravity.MarsReached)
+    //{
         targetRotation = invertedRotation;
-    }
-    else
-    {
-        Vector3 euler = invertedRotation.eulerAngles;
-        euler.z = 90f; // or euler.y = 90f
-        targetRotation = Quaternion.Euler(euler);
-    }
+    //}
+    //else
+    //{
+        //Vector3 euler = invertedRotation.eulerAngles;
+        //euler.z = 90f; // or euler.y = 90f
+        //targetRotation = Quaternion.Euler(euler);
+    //}
 
     
     Camera.transform.localRotation = Quaternion.RotateTowards(
@@ -108,12 +108,12 @@ public class RocketScript : MonoBehaviour
         rb.AddForce(transform.forward * MainValue, ForceMode.Acceleration);
         // se déplace à gauche
         rb.AddTorque(Vector3.forward * -LeftValue, ForceMode.Acceleration);
-        rb.AddForce(transform.forward * LeftValue*13, ForceMode.Acceleration);
+        rb.AddForce(transform.forward * LeftValue*20, ForceMode.Acceleration);
         
         
         // se déplace à droite
         rb.AddTorque(Vector3.forward * RightValue, ForceMode.Acceleration);
-        rb.AddForce(transform.forward * RightValue*13, ForceMode.Acceleration);
+        rb.AddForce(transform.forward * RightValue*20, ForceMode.Acceleration);
         // se déplace sur les côtés
         
 
