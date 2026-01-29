@@ -10,17 +10,22 @@ public class FirstPersRocket : MonoBehaviour
 
     public Image fadeImage;
 
-    private float targetFadeAlpha = 1f;
-
     public float fadeDuration = 0.5f;
 
-    public Slider mySlider;
+    public Slider RightSlider;
+
+    public Slider MainSlider;
+
+    public Slider LeftSlider;
 
     public float LeftReactorValue = 0;
 
     public float MainReactorValue = 0;
 
     public float RightReactorValue = 0;
+
+    public float ReactorForce = 0;
+
 
 
 
@@ -33,7 +38,13 @@ public class FirstPersRocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        LeftReactorValue = mySlider.value;
+        LeftReactorValue = LeftSlider.value;
+        RightReactorValue = RightSlider.value;
+        MainReactorValue = MainSlider.value;
+
+        ReactorForce = (MainReactorValue + RightReactorValue + LeftReactorValue)*40;
+
+        transform.Translate(Vector3.forward * ReactorForce * Time.deltaTime);
     }
 
     IEnumerator FadeToTransparent()
@@ -64,5 +75,7 @@ public class FirstPersRocket : MonoBehaviour
             startColor.b,
             0f
         );
+
+        fadeImage.gameObject.SetActive(false);
     }
 }
