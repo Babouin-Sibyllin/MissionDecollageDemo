@@ -6,18 +6,23 @@ using UnityEngine.UI;
 public class RandomEvents : MonoBehaviour  
 {
 
-    public bool EventOccuring1 = false;
+    public bool EventOccuring = false;
 
-    public bool EventOccuring2 = false;
+    public bool EventIsOccuring = false;
 
-    public bool EventFixStep1 = false;
-    public bool EventFixStep2 = false;
+    public bool Button1 = false;
 
-    public bool EventFixStep3 = false;
+    public bool Button2 = false;
 
-    public bool EventFixStep4 = false;
+    public bool Button3 = false;
 
-    public bool EventFixStep5 = false;
+    public bool Button4 = false;
+
+    public bool Button5 = false;
+
+    public bool Button6 = false;
+
+    int ButtonPicker = 0;
     
 
     int EventPicker = 0;
@@ -25,7 +30,7 @@ public class RandomEvents : MonoBehaviour
     private KeyCode randomKey;
 
     public int sequenceLength = 5; // How many keys in the sequence
-    private List<KeyCode> keySequence = new List<KeyCode>();
+    //private List<KeyCode> keySequence = new List<KeyCode>();
 
     public FirstPersRocket FirstPersRocket;
 
@@ -41,77 +46,182 @@ public class RandomEvents : MonoBehaviour
 
         //Debug.Log("MainSlider: " + FirstPersRocket.MainReactorValue);
 
-        if (!EventOccuring1)
+        if (!EventOccuring)
         {
             StartCoroutine(EventHappening());
-            EventOccuring1 = true;
+            EventOccuring = true;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Button1 = true;
+        } else
+        {
+            Button1 = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Button2 = true;
+        } else
+        {
+            Button2 = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Button3 = true;
+        } else
+        {
+            Button3 = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Button4 = true;
+        } else
+        {
+            Button4 = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            Button5 = true;
+        } else
+        {
+            Button5 = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            Button6 = true;
+        } else
+        {
+            Button6 = false;
         }
         
     }
 
     IEnumerator EventHappening()
     {
-        yield return new WaitForSeconds(10f); // 10 seconds
+        yield return new WaitForSeconds(5f); // 10 secondes
         Debug.Log("10s ont passées");
         if (EventPicker == 0)
         {
             Debug.Log("Réacteur principal endommagé !");
             FirstPersRocket.DamagedMainReactor = true;
+            FirstPersRocket.MainSlider.value = 0;
             StartCoroutine(RepairMain());
             // ici on illuminerait le LED du premier bouton à appuyer
         } else if (EventPicker == 1)
         {
             Debug.Log("Réacteur droit endommagé !");
+            FirstPersRocket.DamagedRightReactor = true;
             FirstPersRocket.RightSlider.value = 0;
+            StartCoroutine(RepairRight());
         } else if (EventPicker == 2)
         {
             Debug.Log("Réacteur gauche endommagé !");
             FirstPersRocket.LeftSlider.value = 0;
+            EventOccuring = false;
         } else if (EventPicker == 3)
         {
             Debug.Log("3");
+            EventOccuring = false;
         } else if (EventPicker == 4)
         {
             Debug.Log("4");
+            EventOccuring = false;
         }
 
         EventPicker = Random.Range(0, 5); // 5 est exclus donc le chiffre est --> 0 à 4
-        EventOccuring1 = false;
     }
 
+        //séquence de réparation du réacteur principal
     IEnumerator RepairMain()
     {
-        // Génère des lettres à appuyer aléatoires
-        //KeySequence = la string de lettre à appuyer.
-        keySequence.Clear();
-        for (int i = 0; i < sequenceLength; i++)
-        {
-            //lettre de A à Z
-            KeyCode randomKey = (KeyCode)Random.Range((int)KeyCode.A, (int)KeyCode.Z + 1);
-            keySequence.Add(randomKey);
-        }
+        sequenceLength = Random.Range(3, 10);
 
-        // Montre quelles touches à appuyer
-        Debug.Log("Sequence: " + string.Join(", ", keySequence));
 
-        // Attent que le joueur ait appuyé les touches en ordre
-        for (int i = 0; i < keySequence.Count; i++)
+            for (int i = 0; i < sequenceLength; i++)
         {
-            bool keyPressed = false;
-            while (!keyPressed)
+            ButtonPicker = Random.Range(0, 6);
+
+            if (ButtonPicker == 0)
             {
-                if (Input.GetKeyDown(keySequence[i]))
-                {
-                    Debug.Log(keySequence[i] + " pressed correctly!");
-                    keyPressed = true;
-
-                    // on allume la LED du bouton ici Ahmoud
-                }
-                yield return null;
+                Debug.Log("press 1");
+                yield return new WaitUntil(() => Button1 == true);
+            } else if (ButtonPicker == 1)
+            {
+                Debug.Log("press 2");
+                yield return new WaitUntil(() => Button2 == true);
+            } else if (ButtonPicker == 2)
+            {
+                Debug.Log("press 3");
+                yield return new WaitUntil(() => Button3 == true);
+            } else if (ButtonPicker == 3)
+            {
+                Debug.Log("press 4");
+                yield return new WaitUntil(() => Button4 == true);
+            } else if (ButtonPicker == 4)
+            {
+                Debug.Log("press 5");
+                yield return new WaitUntil(() => Button5 == true);
+            } else if (ButtonPicker == 5)
+            {
+                Debug.Log("press 6");
+                yield return new WaitUntil(() => Button6 == true);
             }
         }
 
+        Debug.Log("réparation réussie");
         FirstPersRocket.DamagedMainReactor = false;
-        Debug.Log("Sequence completed!");
+        EventOccuring = false;
+        yield break;
+    }
+
+
+        //séquence de réparation du réacteur droit
+    IEnumerator RepairRight()
+    {
+        sequenceLength = Random.Range(3, 10);
+
+
+            for (int i = 0; i < sequenceLength; i++)
+        {
+            ButtonPicker = Random.Range(0, 6);
+
+            if (ButtonPicker == 0)
+            {
+                Debug.Log("press 1");
+                yield return new WaitUntil(() => Button1 == true);
+            } else if (ButtonPicker == 1)
+            {
+                Debug.Log("press 2");
+                yield return new WaitUntil(() => Button2 == true);
+            } else if (ButtonPicker == 2)
+            {
+                Debug.Log("press 3");
+                yield return new WaitUntil(() => Button3 == true);
+            } else if (ButtonPicker == 3)
+            {
+                Debug.Log("press 4");
+                yield return new WaitUntil(() => Button4 == true);
+            } else if (ButtonPicker == 4)
+            {
+                Debug.Log("press 5");
+                yield return new WaitUntil(() => Button5 == true);
+            } else if (ButtonPicker == 5)
+            {
+                Debug.Log("press 6");
+                yield return new WaitUntil(() => Button6 == true);
+            }
+        }
+
+        Debug.Log("réparation réussie");
+        FirstPersRocket.DamagedRightReactor = false;
+        EventOccuring = false;
+        yield break;
     }
 }

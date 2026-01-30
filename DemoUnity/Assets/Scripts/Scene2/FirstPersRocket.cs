@@ -28,6 +28,10 @@ public class FirstPersRocket : MonoBehaviour
 
     public bool DamagedMainReactor = false;
 
+    public bool DamagedRightReactor = false;
+
+    public bool DamagedLeftReactor = false;
+
     public RandomEvents RandomEvents;
 
 
@@ -43,6 +47,8 @@ public class FirstPersRocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //empêche les réacteurs de fonctionner en cas de bris (events)
         if (!DamagedMainReactor)
         {
             MainReactorValue = MainSlider.value;
@@ -51,9 +57,21 @@ public class FirstPersRocket : MonoBehaviour
             MainReactorValue = 0;
         }
 
+        if (!DamagedRightReactor)
+        {
+            RightReactorValue = RightSlider.value;
+        } else
+        {
+            RightReactorValue = 0;
+        }
 
-        LeftReactorValue = LeftSlider.value;
-        RightReactorValue = RightSlider.value;
+        if (!DamagedLeftReactor)
+        {
+            LeftReactorValue = LeftSlider.value;
+        } else
+        {
+            LeftReactorValue = 0;
+        }
         
 
         ReactorForce = (MainReactorValue + RightReactorValue + LeftReactorValue)*40;
