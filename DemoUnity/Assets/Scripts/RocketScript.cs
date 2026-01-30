@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using extOSC;
 
 
 
 
 public class RocketScript : MonoBehaviour
 {
-
+    public OSCReceiver oscReceiver;
+    public OSCTransmitter oscTransmiter;
     public GameObject Rocket;
 
     public GameObject Camera;
@@ -54,6 +56,12 @@ public class RocketScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0f, -9.81f, 0f);
+
+        // --- OSC BINDINGS ---
+        oscReceiver.Bind("/faderGauche", OnFaderGauche);
+        oscReceiver.Bind("/faderCentre", OnFaderCentre);
+        oscReceiver.Bind("/faderDroit", OnFaderDroit);
+
     }
 
     public static float Proportion(float value, float inputMin, float inputMax, float outputMin, float outputMax)
@@ -61,6 +69,23 @@ public class RocketScript : MonoBehaviour
     return Mathf.Clamp(((value - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin), outputMin, outputMax);
 }
 
+    public void OnFaderGauche(OSCMessage message)
+    {
+        int value = message.Values[0].IntValue;
+        LeftSlider.value = Mathf.Clamp01(value / 4095f);
+    }
+
+    public void OnFaderCentre(OSCMessage message)
+    {
+        int value = message.Values[0].IntValue;
+        MainSlider.value = Mathf.Clamp01(value / 4095f);
+    }
+
+    public void OnFaderDroit(OSCMessage message)
+    {
+        int value = message.Values[0].IntValue;
+        RightSlider.value = Mathf.Clamp01(value / 4095f);
+    }
 
 
     void FixedUpdate()
