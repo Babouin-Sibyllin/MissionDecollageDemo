@@ -26,6 +26,11 @@ public class FirstPersRocket : MonoBehaviour
 
     public float ReactorForce = 0;
 
+    public bool DamagedMainReactor = false;
+
+    public RandomEvents RandomEvents;
+
+
 
 
 
@@ -38,13 +43,23 @@ public class FirstPersRocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!DamagedMainReactor)
+        {
+            MainReactorValue = MainSlider.value;
+        } else
+        {
+            MainReactorValue = 0;
+        }
+
+
         LeftReactorValue = LeftSlider.value;
         RightReactorValue = RightSlider.value;
-        MainReactorValue = MainSlider.value;
+        
 
         ReactorForce = (MainReactorValue + RightReactorValue + LeftReactorValue)*40;
 
         transform.Translate(Vector3.forward * ReactorForce * Time.deltaTime);
+        //transform.Translate(Vector3.forward * 25 * Time.deltaTime);
     }
 
     IEnumerator FadeToTransparent()
