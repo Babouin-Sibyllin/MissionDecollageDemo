@@ -4,53 +4,42 @@ using UnityEngine.UI;
 using UnityEngine;
 using extOSC;
 
-
-
-
 public class RocketScript : MonoBehaviour
 {
     public OSCReceiver oscReceiver;
     public OSCTransmitter oscTransmiter;
-    public GameObject Rocket;
 
+    public GameObject Rocket;
     public GameObject Camera;
 
     public ParticleSystem LeftFire;
-
     public ParticleSystem MainFire;
-
     public ParticleSystem RightFire;
-    
     public ParticleSystem LeftPivot;
-
     public ParticleSystem RightPivot;
 
     public Slider LeftSlider;
-
     public Slider RightSlider;
-
     public Slider MainSlider;
-
     public Slider PivotSlider;
 
     public float MainReactorForce = 4f;
-
     public float BaseReactorForce = 10f;
-
     public float SideReactorForce = 10f;
-
     public float rotationSpeed = 90f;
 
     private Rigidbody rb;
 
-    public LayerMask groundLayer;
-
     [SerializeField] float torqueForce = 0.2f;
-
     [SerializeField] float torqueDamp = 0.98f;
 
     public Gravity GravityScript;
 
+    // --- SEUILS ---
+    [Header("Thresholds")]
+    public float mainIgnitionThreshold = 0.05f;
+    public float sideIgnitionThreshold = 0.03f;
+    public float pivotDeadZone = 0.2f;
 
     void Start()
     {
@@ -61,192 +50,123 @@ public class RocketScript : MonoBehaviour
         oscReceiver.Bind("/faderGauche", OnFaderGauche);
         oscReceiver.Bind("/faderCentre", OnFaderCentre);
         oscReceiver.Bind("/faderDroit", OnFaderDroit);
-
     }
 
     public static float Proportion(float value, float inputMin, float inputMax, float outputMin, float outputMax)
-{
-    return Mathf.Clamp(((value - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin), outputMin, outputMax);
-}
+    {
+        return Mathf.Clamp(
+            ((value - inputMin) / (inputMax - inputMin)) * (outputMax - outputMin) + outputMin,
+            outputMin,
+            outputMax
+        );
+    }
 
     public void OnFaderGauche(OSCMessage message)
     {
-        int value = message.Values[0].IntValue;
-        LeftSlider.value = Mathf.Clamp01(value / 4095f);
+        LeftSlider.value = Mathf.Clamp01(message.Values[0].IntValue / 4095f);
     }
 
     public void OnFaderCentre(OSCMessage message)
     {
-        int value = message.Values[0].IntValue;
-        MainSlider.value = Mathf.Clamp01(value / 4095f);
+        MainSlider.value = Mathf.Clamp01(message.Values[0].IntValue / 4095f);
     }
 
     public void OnFaderDroit(OSCMessage message)
     {
-        int value = message.Values[0].IntValue;
-        RightSlider.value = Mathf.Clamp01(value / 4095f);
+        RightSlider.value = Mathf.Clamp01(message.Values[0].IntValue / 4095f);
     }
-
 
     void FixedUpdate()
     {
+        // --- INPUTS BRUTS ---
+        float mainInput = MainSlider.value;   // 0..1
+        float leftInput = LeftSlider.value;
+        float rightInput = RightSlider.value;
+        float pivotInput = PivotSlider.value;
 
-        bool w = Input.GetKey(KeyCode.W);
-        bool a = Input.GetKey(KeyCode.A);
-        bool d = Input.GetKey(KeyCode.D);
-        bool e = Input.GetKey(KeyCode.E);
-        bool q = Input.GetKey(KeyCode.Q);
+        // --- VALEURS CONVERTIES ---
+        float mainForce = Proportion(mainInput, 0f, 1f, 0f, 9f);
+        float leftForce = Proportion(leftInput, 0f, 1f, 0f, 0.2f);
+        float rightForce = Proportion(rightInput, 0f, 1f, 0f, 0.2f);
+        float pivotForce = Proportion(pivotInput, 0f, 1f, -0.6f, 0.6f);
 
+        // --- CAMERA STABILISÉE ---
+        Quaternion invertedRotation = Quaternion.Inverse(rb.transform.localRotation);
+        Camera.transform.localRotation = Quaternion.RotateTowards(
+            Camera.transform.localRotation,
+            invertedRotation,
+            rotationSpeed * Time.deltaTime
+        );
 
-
-        float MainValue = Proportion(MainSlider.value, 0f, 1f, 0f, 9f);
-        float RightValue = Proportion(RightSlider.value, 0f, 1f, 0f, 0.2f);
-        float LeftValue = Proportion(LeftSlider.value, 0f, 1f, 0f, 0.2f);
-        float PivotValue = Proportion(PivotSlider.value, 0f, 1f, -0.6f, 0.6f);
-
-        Quaternion invertedRotation = Quaternion.Inverse(rb.transform.localRotation); // declare first
-
-
-        Quaternion targetRotation;
-
-    //if (!Gravity.MarsReached)
-    //{
-        targetRotation = invertedRotation;
-    //}
-    //else
-    //{
-        //Vector3 euler = invertedRotation.eulerAngles;
-        //euler.z = 90f; // or euler.y = 90f
-        //targetRotation = Quaternion.Euler(euler);
-    //}
-
-    
-    Camera.transform.localRotation = Quaternion.RotateTowards(
-        Camera.transform.localRotation,
-        targetRotation,
-        rotationSpeed * Time.deltaTime
-    );
-        
-
-        //avance vers le haut
-        
-        rb.AddForce(transform.forward * MainValue, ForceMode.Acceleration);
-        // se déplace à gauche
-        rb.AddTorque(Vector3.forward * -LeftValue, ForceMode.Acceleration);
-        rb.AddForce(transform.forward * LeftValue*20, ForceMode.Acceleration);
-        
-        
-        // se déplace à droite
-        rb.AddTorque(Vector3.forward * RightValue, ForceMode.Acceleration);
-        rb.AddForce(transform.forward * RightValue*20, ForceMode.Acceleration);
-        // se déplace sur les côtés
-        
-
-        if (MainValue > 0f)
-            MainFire.Play();
+        // =========================
+        //      MAIN REACTOR
+        // =========================
+        if (mainInput > mainIgnitionThreshold)
+        {
+            rb.AddForce(transform.forward * mainForce, ForceMode.Acceleration);
+            SetFire(MainFire, true);
+        }
         else
-            MainFire.Stop();
+        {
+            SetFire(MainFire, false);
+        }
 
-        if (RightValue > 0)
-            RightFire.Play();
+        // =========================
+        //      LEFT REACTOR
+        // =========================
+        if (leftInput > sideIgnitionThreshold)
+        {
+            rb.AddForce(transform.forward * leftForce * 20f, ForceMode.Acceleration);
+            rb.AddTorque(Vector3.forward * -leftForce, ForceMode.Acceleration);
+            SetFire(LeftFire, true);
+        }
         else
-            RightFire.Stop();
-
-        if (LeftValue > 0) {
-            LeftFire.Play();
-            }  
-        else {
-            LeftFire.Stop();
-        }
-            
-
-        if (PivotValue > 0.2f) 
         {
-            RightPivot.Play();
-            rb.AddTorque(Vector3.forward * PivotValue, ForceMode.Acceleration);
-        } 
-        else {
-            RightPivot.Stop();
-            rb.AddTorque(Vector3.forward * 0, ForceMode.Acceleration);
-            }
-            
-            
-
-        if (PivotValue < -0.2f) {
-            LeftPivot.Play();
-            rb.AddTorque(Vector3.forward * PivotValue, ForceMode.Acceleration);
+            SetFire(LeftFire, false);
         }
-        else {
-            rb.AddTorque(Vector3.forward * 0, ForceMode.Acceleration);
-            LeftPivot.Stop();
-            }
-            
 
-        if (w)
+        // =========================
+        //      RIGHT REACTOR
+        // =========================
+        if (rightInput > sideIgnitionThreshold)
         {
-            rb.AddForce(transform.forward * MainReactorForce, ForceMode.Acceleration);
-            rb.AddForce(transform.forward * BaseReactorForce, ForceMode.Acceleration);
+            rb.AddForce(transform.forward * rightForce * 20f, ForceMode.Acceleration);
+            rb.AddTorque(Vector3.forward * rightForce, ForceMode.Acceleration);
+            SetFire(RightFire, true);
         }
-
-        if (a)
+        else
         {
-            rb.AddTorque(Vector3.forward * torqueForce, ForceMode.Acceleration);
+            SetFire(RightFire, false);
         }
 
-
-        if (d)
+        // =========================
+        //          PIVOT
+        // =========================
+        if (pivotForce > pivotDeadZone)
         {
-            rb.AddTorque(Vector3.forward * -torqueForce, ForceMode.Acceleration);
+            rb.AddTorque(Vector3.forward * pivotForce, ForceMode.Acceleration);
+            SetFire(RightPivot, true);
+            SetFire(LeftPivot, false);
         }
-
-        if (e) {
-            rb.AddTorque(Vector3.forward * -torqueForce*3, ForceMode.Acceleration);
-        }
-
-        if (q) {
-            rb.AddTorque(Vector3.forward * torqueForce*3, ForceMode.Acceleration);
-        }
-
-        if (!d && !a && !w && !e && !q)
+        else if (pivotForce < -pivotDeadZone)
         {
+            rb.AddTorque(Vector3.forward * pivotForce, ForceMode.Acceleration);
+            SetFire(LeftPivot, true);
+            SetFire(RightPivot, false);
+        }
+        else
+        {
+            SetFire(LeftPivot, false);
+            SetFire(RightPivot, false);
         }
 
-        
         rb.angularVelocity *= torqueDamp;
-
-        //if (w)
-            //MainFire.Play();
-        //else
-            //MainFire.Stop();
-
-        //if (a)
-            //RightFire.Play();
-        //else
-            //RightFire.Stop();
-
-        //if (d)
-            //LeftFire.Play();
-        //else
-            //LeftFire.Stop();
-
-        //if (q) 
-            //RightPivot.Play();
-        //else 
-            //RightPivot.Stop();
-            
-
-        //if (e) 
-            //LeftPivot.Play();
-        //else 
-            //LeftPivot.Stop();
-            
-
-
     }
 
-
-    void Update()
+    // --- SAFE PARTICLE CONTROL ---
+    void SetFire(ParticleSystem ps, bool active)
     {
-        
+        if (active && !ps.isPlaying) ps.Play();
+        if (!active && ps.isPlaying) ps.Stop();
     }
 }
