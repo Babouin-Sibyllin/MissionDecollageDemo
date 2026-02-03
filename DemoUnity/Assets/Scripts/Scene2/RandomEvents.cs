@@ -1,270 +1,157 @@
+using extOSC;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RandomEvents : MonoBehaviour  
+public class RandomEvents : MonoBehaviour
 {
+    [Header("OSC")]
+    public OSCReceiver oscReceiver;
 
-    public bool EventOccuring = false;
-
-    public bool EventIsOccuring = false;
-
+    [Header("Buttons")]
     public bool Button1 = false;
-
     public bool Button2 = false;
-
     public bool Button3 = false;
-
     public bool Button4 = false;
-
     public bool Button5 = false;
-
     public bool Button6 = false;
 
-    int ButtonPicker = 0;
-    
+    [Header("Event State")]
+    public bool EventOccuring = false;
 
-    int EventPicker = 0;
+    private int ButtonPicker = 0;
+    private int EventPicker = 0;
+    public int sequenceLength = 5;
 
-    private KeyCode randomKey;
-
-    public int sequenceLength = 5; // How many keys in the sequence
-    //private List<KeyCode> keySequence = new List<KeyCode>();
-
+    [Header("References")]
     public FirstPersRocket FirstPersRocket;
 
-    // Start is called before the first frame update
     void Start()
     {
         EventPicker = Random.Range(0, 5);
+
+        // --- OSC Bindings ---
+        oscReceiver.Bind("/key", (msg) => Button1 = msg.Values[0].IntValue == 0);
+        oscReceiver.Bind("/key1", (msg) => Button2 = msg.Values[0].IntValue == 0);
+        oscReceiver.Bind("/key2", (msg) => Button3 = msg.Values[0].IntValue == 0);
+        oscReceiver.Bind("/key3", (msg) => Button4 = msg.Values[0].IntValue == 0);
+        oscReceiver.Bind("/key4", (msg) => Button5 = msg.Values[0].IntValue == 0);
+        oscReceiver.Bind("/key5", (msg) => Button6 = msg.Values[0].IntValue == 0);
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-
-        //Debug.Log("MainSlider: " + FirstPersRocket.MainReactorValue);
-
+        // Démarre un nouvel event si aucun en cours
         if (!EventOccuring)
         {
             StartCoroutine(EventHappening());
             EventOccuring = true;
         }
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Button1 = true;
-        } else
-        {
-            Button1 = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Button2 = true;
-        } else
-        {
-            Button2 = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            Button3 = true;
-        } else
-        {
-            Button3 = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            Button4 = true;
-        } else
-        {
-            Button4 = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            Button5 = true;
-        } else
-        {
-            Button5 = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            Button6 = true;
-        } else
-        {
-            Button6 = false;
-        }
-        
     }
 
     IEnumerator EventHappening()
     {
-        yield return new WaitForSeconds(5f); // 10 secondes
-        Debug.Log("10s ont passées");
+        yield return new WaitForSeconds(5f);
+        Debug.Log("5 secondes passées, check event...");
+
         if (EventPicker == 0)
         {
             Debug.Log("Réacteur principal endommagé !");
             FirstPersRocket.DamagedMainReactor = true;
             FirstPersRocket.MainSlider.value = 0;
             StartCoroutine(RepairMain());
-            // ici on illuminerait le LED du premier bouton à appuyer
-        } else if (EventPicker == 1)
+        }
+        else if (EventPicker == 1)
         {
             Debug.Log("Réacteur droit endommagé !");
             FirstPersRocket.DamagedRightReactor = true;
             FirstPersRocket.RightSlider.value = 0;
             StartCoroutine(RepairRight());
-        } else if (EventPicker == 2)
+        }
+        else if (EventPicker == 2)
         {
             Debug.Log("Réacteur gauche endommagé !");
             FirstPersRocket.DamagedLeftReactor = true;
             FirstPersRocket.LeftSlider.value = 0;
             StartCoroutine(RepairLeft());
-        } else if (EventPicker == 3)
+        }
+        else
         {
-            Debug.Log("3");
-            EventOccuring = false;
-        } else if (EventPicker == 4)
-        {
-            Debug.Log("4");
             EventOccuring = false;
         }
 
-        EventPicker = Random.Range(0, 5); // 5 est exclus donc le chiffre est --> 0 à 4
+        EventPicker = Random.Range(0, 5);
     }
 
-        //séquence de réparation du réacteur principal
+    // --- Séquences de réparation ---
     IEnumerator RepairMain()
     {
         sequenceLength = Random.Range(3, 10);
 
-
-            for (int i = 0; i < sequenceLength; i++)
+        for (int i = 0; i < sequenceLength; i++)
         {
             ButtonPicker = Random.Range(0, 6);
-
-            if (ButtonPicker == 0)
+            switch (ButtonPicker)
             {
-                Debug.Log("press 1");
-                yield return new WaitUntil(() => Button1 == true);
-            } else if (ButtonPicker == 1)
-            {
-                Debug.Log("press 2");
-                yield return new WaitUntil(() => Button2 == true);
-            } else if (ButtonPicker == 2)
-            {
-                Debug.Log("press 3");
-                yield return new WaitUntil(() => Button3 == true);
-            } else if (ButtonPicker == 3)
-            {
-                Debug.Log("press 4");
-                yield return new WaitUntil(() => Button4 == true);
-            } else if (ButtonPicker == 4)
-            {
-                Debug.Log("press 5");
-                yield return new WaitUntil(() => Button5 == true);
-            } else if (ButtonPicker == 5)
-            {
-                Debug.Log("press 6");
-                yield return new WaitUntil(() => Button6 == true);
+                case 0: Debug.Log("Séquence: appuyez sur le bouton 1 (Rouge)"); yield return new WaitUntil(() => Button1); break;
+                case 1: Debug.Log("Séquence: appuyez sur le bouton 2 (Vert)"); yield return new WaitUntil(() => Button2); break;
+                case 2: Debug.Log("Séquence: appuyez sur le bouton 3 (Bleu)"); yield return new WaitUntil(() => Button3); break;
+                case 3: Debug.Log("Séquence: appuyez sur le bouton 4 (Jaune)"); yield return new WaitUntil(() => Button4); break;
+                case 4: Debug.Log("Séquence: appuyez sur le bouton 5 (Magenta)"); yield return new WaitUntil(() => Button5); break;
+                case 5: Debug.Log("Séquence: appuyez sur le bouton 6 (Cyan)"); yield return new WaitUntil(() => Button6); break;
             }
         }
 
-        Debug.Log("réparation réussie");
+        Debug.Log("Réparation réacteur principal réussie !");
         FirstPersRocket.DamagedMainReactor = false;
         EventOccuring = false;
-        yield break;
     }
 
-
-        //séquence de réparation du réacteur gauche
     IEnumerator RepairRight()
     {
         sequenceLength = Random.Range(3, 10);
 
-
-            for (int i = 0; i < sequenceLength; i++)
+        for (int i = 0; i < sequenceLength; i++)
         {
             ButtonPicker = Random.Range(0, 6);
-
-            if (ButtonPicker == 0)
+            switch (ButtonPicker)
             {
-                Debug.Log("press 1");
-                yield return new WaitUntil(() => Button1 == true);
-            } else if (ButtonPicker == 1)
-            {
-                Debug.Log("press 2");
-                yield return new WaitUntil(() => Button2 == true);
-            } else if (ButtonPicker == 2)
-            {
-                Debug.Log("press 3");
-                yield return new WaitUntil(() => Button3 == true);
-            } else if (ButtonPicker == 3)
-            {
-                Debug.Log("press 4");
-                yield return new WaitUntil(() => Button4 == true);
-            } else if (ButtonPicker == 4)
-            {
-                Debug.Log("press 5");
-                yield return new WaitUntil(() => Button5 == true);
-            } else if (ButtonPicker == 5)
-            {
-                Debug.Log("press 6");
-                yield return new WaitUntil(() => Button6 == true);
+                case 0: Debug.Log("Séquence: appuyez sur le bouton 1 (Rouge)"); yield return new WaitUntil(() => Button1); break;
+                case 1: Debug.Log("Séquence: appuyez sur le bouton 2 (Vert)"); yield return new WaitUntil(() => Button2); break;
+                case 2: Debug.Log("Séquence: appuyez sur le bouton 3 (Bleu)"); yield return new WaitUntil(() => Button3); break;
+                case 3: Debug.Log("Séquence: appuyez sur le bouton 4 (Jaune)"); yield return new WaitUntil(() => Button4); break;
+                case 4: Debug.Log("Séquence: appuyez sur le bouton 5 (Magenta)"); yield return new WaitUntil(() => Button5); break;
+                case 5: Debug.Log("Séquence: appuyez sur le bouton 6 (Cyan)"); yield return new WaitUntil(() => Button6); break;
             }
         }
 
-        Debug.Log("réparation réussie");
+        Debug.Log("Réparation réacteur droit réussie !");
         FirstPersRocket.DamagedRightReactor = false;
         EventOccuring = false;
-        yield break;
     }
 
     IEnumerator RepairLeft()
     {
         sequenceLength = Random.Range(3, 10);
 
-
-            for (int i = 0; i < sequenceLength; i++)
+        for (int i = 0; i < sequenceLength; i++)
         {
             ButtonPicker = Random.Range(0, 6);
-
-            if (ButtonPicker == 0)
+            switch (ButtonPicker)
             {
-                Debug.Log("press 1");
-                yield return new WaitUntil(() => Button1 == true);
-            } else if (ButtonPicker == 1)
-            {
-                Debug.Log("press 2");
-                yield return new WaitUntil(() => Button2 == true);
-            } else if (ButtonPicker == 2)
-            {
-                Debug.Log("press 3");
-                yield return new WaitUntil(() => Button3 == true);
-            } else if (ButtonPicker == 3)
-            {
-                Debug.Log("press 4");
-                yield return new WaitUntil(() => Button4 == true);
-            } else if (ButtonPicker == 4)
-            {
-                Debug.Log("press 5");
-                yield return new WaitUntil(() => Button5 == true);
-            } else if (ButtonPicker == 5)
-            {
-                Debug.Log("press 6");
-                yield return new WaitUntil(() => Button6 == true);
+                case 0: Debug.Log("Séquence: appuyez sur le bouton 1 (Rouge)"); yield return new WaitUntil(() => Button1); break;
+                case 1: Debug.Log("Séquence: appuyez sur le bouton 2 (Vert)"); yield return new WaitUntil(() => Button2); break;
+                case 2: Debug.Log("Séquence: appuyez sur le bouton 3 (Bleu)"); yield return new WaitUntil(() => Button3); break;
+                case 3: Debug.Log("Séquence: appuyez sur le bouton 4 (Jaune)"); yield return new WaitUntil(() => Button4); break;
+                case 4: Debug.Log("Séquence: appuyez sur le bouton 5 (Magenta)"); yield return new WaitUntil(() => Button5); break;
+                case 5: Debug.Log("Séquence: appuyez sur le bouton 6 (Cyan)"); yield return new WaitUntil(() => Button6); break;
             }
         }
 
-        Debug.Log("réparation réussie");
+        Debug.Log("Réparation réacteur gauche réussie !");
         FirstPersRocket.DamagedLeftReactor = false;
         EventOccuring = false;
-        yield break;
     }
 }
