@@ -123,8 +123,9 @@ public class RandomEvents : MonoBehaviour
         } else if (EventPicker == 2)
         {
             Debug.Log("Réacteur gauche endommagé !");
+            FirstPersRocket.DamagedLeftReactor = true;
             FirstPersRocket.LeftSlider.value = 0;
-            EventOccuring = false;
+            StartCoroutine(RepairLeft());
         } else if (EventPicker == 3)
         {
             Debug.Log("3");
@@ -182,7 +183,7 @@ public class RandomEvents : MonoBehaviour
     }
 
 
-        //séquence de réparation du réacteur droit
+        //séquence de réparation du réacteur gauche
     IEnumerator RepairRight()
     {
         sequenceLength = Random.Range(3, 10);
@@ -221,6 +222,48 @@ public class RandomEvents : MonoBehaviour
 
         Debug.Log("réparation réussie");
         FirstPersRocket.DamagedRightReactor = false;
+        EventOccuring = false;
+        yield break;
+    }
+
+    IEnumerator RepairLeft()
+    {
+        sequenceLength = Random.Range(3, 10);
+
+
+            for (int i = 0; i < sequenceLength; i++)
+        {
+            ButtonPicker = Random.Range(0, 6);
+
+            if (ButtonPicker == 0)
+            {
+                Debug.Log("press 1");
+                yield return new WaitUntil(() => Button1 == true);
+            } else if (ButtonPicker == 1)
+            {
+                Debug.Log("press 2");
+                yield return new WaitUntil(() => Button2 == true);
+            } else if (ButtonPicker == 2)
+            {
+                Debug.Log("press 3");
+                yield return new WaitUntil(() => Button3 == true);
+            } else if (ButtonPicker == 3)
+            {
+                Debug.Log("press 4");
+                yield return new WaitUntil(() => Button4 == true);
+            } else if (ButtonPicker == 4)
+            {
+                Debug.Log("press 5");
+                yield return new WaitUntil(() => Button5 == true);
+            } else if (ButtonPicker == 5)
+            {
+                Debug.Log("press 6");
+                yield return new WaitUntil(() => Button6 == true);
+            }
+        }
+
+        Debug.Log("réparation réussie");
+        FirstPersRocket.DamagedLeftReactor = false;
         EventOccuring = false;
         yield break;
     }
