@@ -3,119 +3,132 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
+using extOSC;
 
 public class FirstPersRocket : MonoBehaviour
 {
+    // ======================
+    //         OSC
+    // ======================
+    [Header("OSC")]
+    public OSCReceiver oscReceiver;
 
-
+    // ======================
+    //         UI
+    // ======================
     public Image fadeImage;
-
     public float fadeDuration = 0.5f;
 
     public Slider RightSlider;
-
     public Slider MainSlider;
-
     public Slider LeftSlider;
 
+    // ======================
+    //        OBJECTS
+    // ======================
     public GameObject RocketObject;
-
     public GameObject MarsObject;
 
+    // ======================
+    //        VALUES
+    // ======================
     public float LeftReactorValue = 0;
-
     public float MainReactorValue = 0;
-
     public float RightReactorValue = 0;
 
     public float ReactorForce = 0;
-
     public float currentRotationSpeed = 0;
 
+    // ======================
+    //        DAMAGE
+    // ======================
     public bool DamagedMainReactor = false;
-
     public bool DamagedRightReactor = false;
-
     public bool DamagedLeftReactor = false;
 
     public float rotationEaseSpeed = 20;
 
+    // ======================
+    //         UI TEXT
+    // ======================
     public TextMeshProUGUI vitesseUI;
-
     public TextMeshProUGUI DistanceUI;
 
     public RandomEvents RandomEvents;
 
-
-
-
-
-    // Start is called before the first frame update
+    // ======================
+    //        START
+    // ======================
     void Start()
     {
         StartCoroutine(FadeToTransparent());
+
+        // --- OSC BINDINGS ---
+        oscReceiver.Bind("/faderGauche", OnFaderGauche);
+        oscReceiver.Bind("/faderCentre", OnFaderCentre);
+        oscReceiver.Bind("/faderDroit", OnFaderDroit);
     }
 
-    // Update is called once per frame
+    // ======================
+    //      OSC CALLBACKS
+    // ======================
+    void OnFaderGauche(OSCMessage message)
+    {
+        LeftSlider.value = Mathf.Clamp01(message.Values[0].IntValue / 4095f);
+    }
+
+    void OnFaderCentre(OSCMessage message)
+    {
+        MainSlider.value = Mathf.Clamp01(message.Values[0].IntValue / 4095f);
+    }
+
+    void OnFaderDroit(OSCMessage message)
+    {
+        RightSlider.value = Mathf.Clamp01(message.Values[0].IntValue / 4095f);
+    }
+
+    // ======================
+    //        UPDATE
+    // ======================
     void Update()
     {
-
         float zValueRocket = RocketObject.transform.position.z;
         float zValueMars = MarsObject.transform.position.z;
         float distanceRocketMars = (zValueRocket - zValueMars);
 
-        //UI
+        // --- UI ---
         vitesseUI.text = "Vitesse actuelle: " + ReactorForce.ToString("F1");
-        DistanceUI.text = "distance restante: " + (distanceRocketMars+ 2000);
+        DistanceUI.text = "distance restante: " + (distanceRocketMars + 2000);
 
-
-        //calcul du ease
+        // --- ROTATION EASE ---
         currentRotationSpeed = Mathf.Lerp(
-        currentRotationSpeed,
-        LeftReactorValue*20,
-        rotationEaseSpeed * Time.deltaTime
-    );
+            currentRotationSpeed,
+            LeftReactorValue * 20,
+            rotationEaseSpeed * Time.deltaTime
+        );
 
-    currentRotationSpeed = Mathf.Lerp(
-        currentRotationSpeed,
-        -RightReactorValue*20,
-        rotationEaseSpeed * Time.deltaTime
-    );
+        currentRotationSpeed = Mathf.Lerp(
+            currentRotationSpeed,
+            -RightReactorValue * 20,
+            rotationEaseSpeed * Time.deltaTime
+        );
 
-        //empêche les réacteurs de fonctionner en cas de bris (events)
-        if (!DamagedMainReactor)
-        {
-            MainReactorValue = MainSlider.value;
-        } else
-        {
-            MainReactorValue = 0;
-        }
+        // --- DAMAGE LOGIC ---
+        MainReactorValue = DamagedMainReactor ? 0 : MainSlider.value;
+        RightReactorValue = DamagedRightReactor ? 0 : RightSlider.value;
+        LeftReactorValue = DamagedLeftReactor ? 0 : LeftSlider.value;
 
-        if (!DamagedRightReactor)
-        {
-            RightReactorValue = RightSlider.value;
-        } else
-        {
-            RightReactorValue = 0;
-        }
+        // --- FORCE ---
+        ReactorForce = (MainReactorValue + RightReactorValue + LeftReactorValue) * 40;
 
-        if (!DamagedLeftReactor)
-        {
-            LeftReactorValue = LeftSlider.value;
-        } else
-        {
-            LeftReactorValue = 0;
-        }
-        
-
-        ReactorForce = (MainReactorValue + RightReactorValue + LeftReactorValue)*40;
-
+        // --- MOVE ---
         transform.Translate(Vector3.forward * ReactorForce * Time.deltaTime);
         transform.Rotate(Vector3.up * currentRotationSpeed * Time.deltaTime);
-        //transform.Translate(Vector3.forward * 25 * Time.deltaTime);
     }
 
+    // ======================
+    //        FADE
+    // ======================
     IEnumerator FadeToTransparent()
     {
         yield return new WaitForSeconds(2f);
@@ -137,7 +150,6 @@ public class FirstPersRocket : MonoBehaviour
             yield return null;
         }
 
-        // Ensure fully transparent at the end
         fadeImage.color = new Color(
             startColor.r,
             startColor.g,
