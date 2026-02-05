@@ -17550,9 +17550,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   oscReceiver: {fileID: 2006394089}
-  oscTransmiter: {fileID: 2006394088}
-  Rocket: {fileID: 1284322958}
+  oscReceiverKey: {fileID: 60801110}
   Camera: {fileID: 330585543}
+  panelUI: {fileID: 1906243400}
   LeftFire: {fileID: 1163306170}
   MainFire: {fileID: 1067024795}
   RightFire: {fileID: 2000615399}
@@ -17562,13 +17562,8 @@ MonoBehaviour:
   RightSlider: {fileID: 1542453113}
   MainSlider: {fileID: 1341436116}
   PivotSlider: {fileID: 1228171576}
-  MainReactorForce: 4
-  BaseReactorForce: 10
-  SideReactorForce: 10
   rotationSpeed: 90
-  torqueForce: 0.5
   torqueDamp: 0.98
-  GravityScript: {fileID: 1924591922}
   mainIgnitionThreshold: 0.05
   sideIgnitionThreshold: 0.03
   pivotDeadZone: 0.2
@@ -28432,7 +28427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1906243401
 RectTransform:
   m_ObjectHideFlags: 0
