@@ -66,7 +66,7 @@ public class RandomEvents : MonoBehaviour
 
     IEnumerator EventHappening()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(15f);
         Debug.Log("5 secondes passées, check event...");
 
         EventPicker = Random.Range(0, 5);
