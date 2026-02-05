@@ -52,6 +52,7 @@ public class RocketScript : MonoBehaviour
         oscReceiver.Bind("/faderDroit", OnFaderDroit);
     }
 
+
     public static float Proportion(float value, float inputMin, float inputMax, float outputMin, float outputMax)
     {
         return Mathf.Clamp(
