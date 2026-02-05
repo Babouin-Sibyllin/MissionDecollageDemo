@@ -311,10 +311,12 @@ MonoBehaviour:
   Button4: 0
   Button5: 0
   Button6: 0
+  DialogueOccuring: 0
   EventOccuring: 0
   sequenceLength: 5
   FirstPersRocket: {fileID: 83102545}
   DialogueUI: {fileID: 426278232}
+  DialogueBox: {fileID: 2057759752}
 --- !u!1001 &100949276
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1240,7 +1242,7 @@ RectTransform:
   m_GameObject: {fileID: 426278230}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9539483, y: 1.77, z: 0.9539483}
+  m_LocalScale: {x: 0.9539483, y: 2.26, z: 0.9539483}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2057759753}
@@ -1333,7 +1335,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -34.599762, y: 94.13868, z: -38.802353, w: 92.63645}
+  m_margin: {x: -34.599762, y: 117.06733, z: -38.802353, w: 116.47511}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4155,7 +4157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2057759753
 RectTransform:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ public class RandomEvents : MonoBehaviour
     public bool Button4 = false;
     public bool Button5 = false;
     public bool Button6 = false;
+    public bool DialogueOccuring = false;
 
     [Header("Event State")]
     public bool EventOccuring = false;
@@ -24,10 +25,12 @@ public class RandomEvents : MonoBehaviour
     private int ButtonPicker = 0;
     private int EventPicker = 0;
     public int sequenceLength = 5;
+    
 
     [Header("References")]
     public FirstPersRocket FirstPersRocket;
     public TextMeshProUGUI DialogueUI;
+    public GameObject DialogueBox;
 
     void Start()
     {
@@ -51,6 +54,14 @@ public class RandomEvents : MonoBehaviour
             StartCoroutine(EventHappening());
             EventOccuring = true;
         }
+
+        if (DialogueOccuring) {
+            DialogueBox.gameObject.SetActive(true);
+        } else {
+            DialogueBox.gameObject.SetActive(false);
+        }
+            
+        
     }
 
     IEnumerator EventHappening()
@@ -62,6 +73,7 @@ public class RandomEvents : MonoBehaviour
 
         if (EventPicker == 0)
         {
+            DialogueOccuring = true;
             DialogueUI.text = "Réacteur principal endommagé";
             FirstPersRocket.DamagedMainReactor = true;
             FirstPersRocket.MainSlider.value = 0;
@@ -69,14 +81,16 @@ public class RandomEvents : MonoBehaviour
         }
         else if (EventPicker == 1)
         {
-            Debug.Log("Réacteur droit endommagé !");
+            DialogueOccuring = true;
+            DialogueUI.text = "Réacteur droit endommagé";
             FirstPersRocket.DamagedRightReactor = true;
             FirstPersRocket.RightSlider.value = 0;
             StartCoroutine(RepairRight());
         }
         else if (EventPicker == 2)
         {
-            Debug.Log("Réacteur gauche endommagé !");
+            DialogueOccuring = true;
+            DialogueUI.text = "Réacteur gauche endommagé";
             FirstPersRocket.DamagedLeftReactor = true;
             FirstPersRocket.LeftSlider.value = 0;
             StartCoroutine(RepairLeft());
@@ -84,6 +98,7 @@ public class RandomEvents : MonoBehaviour
         else
         {
             EventOccuring = false;
+            DialogueOccuring = false;
         }
 
         
@@ -97,6 +112,8 @@ public class RandomEvents : MonoBehaviour
         for (int i = 0; i < sequenceLength; i++)
         {
             ButtonPicker = Random.Range(0, 6);
+
+            yield return new WaitForSeconds(2.0f);
             switch (ButtonPicker)
             {
                 case 0: DialogueUI.text = "Appuyez sur le bouton rouge ! "; yield return new WaitUntil(() => Button1); break;
@@ -110,6 +127,7 @@ public class RandomEvents : MonoBehaviour
 
         DialogueUI.text = "Réparation du réacteur principal réussie. ";
         FirstPersRocket.DamagedMainReactor = false;
+        DialogueOccuring = false;
         EventOccuring = false;
     }
 
@@ -120,19 +138,22 @@ public class RandomEvents : MonoBehaviour
         for (int i = 0; i < sequenceLength; i++)
         {
             ButtonPicker = Random.Range(0, 6);
+
+            yield return new WaitForSeconds(2.0f);
             switch (ButtonPicker)
             {
-                case 0: Debug.Log("Séquence: appuyez sur le bouton 1 (Rouge)"); yield return new WaitUntil(() => Button1); break;
-                case 1: Debug.Log("Séquence: appuyez sur le bouton 2 (Vert)"); yield return new WaitUntil(() => Button2); break;
-                case 2: Debug.Log("Séquence: appuyez sur le bouton 3 (Bleu)"); yield return new WaitUntil(() => Button3); break;
-                case 3: Debug.Log("Séquence: appuyez sur le bouton 4 (Jaune)"); yield return new WaitUntil(() => Button4); break;
-                case 4: Debug.Log("Séquence: appuyez sur le bouton 5 (Magenta)"); yield return new WaitUntil(() => Button5); break;
-                case 5: Debug.Log("Séquence: appuyez sur le bouton 6 (Cyan)"); yield return new WaitUntil(() => Button6); break;
+                case 0: DialogueUI.text = "Appuyez sur le bouton rouge !"; yield return new WaitUntil(() => Button1); break;
+                case 1: DialogueUI.text = "Appuyez sur le bouton vert !"; yield return new WaitUntil(() => Button2); break;
+                case 2: DialogueUI.text = "Appuyez sur le bouton bleu !"; yield return new WaitUntil(() => Button3); break;
+                case 3: DialogueUI.text = "Appuyez sur le bouton jaune !"; yield return new WaitUntil(() => Button4); break;
+                case 4: DialogueUI.text = "Appuyez sur le bouton magenta !"; yield return new WaitUntil(() => Button5); break;
+                case 5: DialogueUI.text = "Appuyez sur le bouton cyan !"; yield return new WaitUntil(() => Button6); break;
             }
         }
 
         Debug.Log("Réparation réacteur droit réussie !");
         FirstPersRocket.DamagedRightReactor = false;
+        DialogueOccuring = false;
         EventOccuring = false;
     }
 
@@ -143,19 +164,22 @@ public class RandomEvents : MonoBehaviour
         for (int i = 0; i < sequenceLength; i++)
         {
             ButtonPicker = Random.Range(0, 6);
+
+            yield return new WaitForSeconds(2.0f);
             switch (ButtonPicker)
             {
-                case 0: Debug.Log("Séquence: appuyez sur le bouton 1 (Rouge)"); yield return new WaitUntil(() => Button1); break;
-                case 1: Debug.Log("Séquence: appuyez sur le bouton 2 (Vert)"); yield return new WaitUntil(() => Button2); break;
-                case 2: Debug.Log("Séquence: appuyez sur le bouton 3 (Bleu)"); yield return new WaitUntil(() => Button3); break;
-                case 3: Debug.Log("Séquence: appuyez sur le bouton 4 (Jaune)"); yield return new WaitUntil(() => Button4); break;
-                case 4: Debug.Log("Séquence: appuyez sur le bouton 5 (Magenta)"); yield return new WaitUntil(() => Button5); break;
-                case 5: Debug.Log("Séquence: appuyez sur le bouton 6 (Cyan)"); yield return new WaitUntil(() => Button6); break;
+                case 0: DialogueUI.text = "Appuyez sur le bouton rouge !"; yield return new WaitUntil(() => Button1); break;
+                case 1: DialogueUI.text = "Appuyez sur le bouton vert !"; yield return new WaitUntil(() => Button2); break;
+                case 2: DialogueUI.text = "Appuyez sur le bouton bleu !"; yield return new WaitUntil(() => Button3); break;
+                case 3: DialogueUI.text = "Appuyez sur le bouton jaune !"; yield return new WaitUntil(() => Button4); break;
+                case 4: DialogueUI.text = "Appuyez sur le bouton magenta !"; yield return new WaitUntil(() => Button5); break;
+                case 5: DialogueUI.text = "Appuyez sur le bouton cyan !"; yield return new WaitUntil(() => Button6); break;
             }
         }
 
         Debug.Log("Réparation réacteur gauche réussie !");
         FirstPersRocket.DamagedLeftReactor = false;
+        DialogueOccuring = false;
         EventOccuring = false;
     }
 }
