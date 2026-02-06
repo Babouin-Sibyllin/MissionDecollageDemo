@@ -107,13 +107,14 @@ public class RandomEvents : MonoBehaviour
     // --- Séquences de réparation ---
     IEnumerator RepairMain()
     {
+        yield return new WaitForSeconds(2.0f);
         sequenceLength = Random.Range(3, 10);
 
         for (int i = 0; i < sequenceLength; i++)
         {
             ButtonPicker = Random.Range(0, 6);
 
-            yield return new WaitForSeconds(2.0f);
+            
             switch (ButtonPicker)
             {
                 case 0: DialogueUI.text = "Appuyez sur le bouton rouge ! "; yield return new WaitUntil(() => Button1); break;
@@ -133,13 +134,14 @@ public class RandomEvents : MonoBehaviour
 
     IEnumerator RepairRight()
     {
+        yield return new WaitForSeconds(2.0f);
         sequenceLength = Random.Range(3, 10);
 
         for (int i = 0; i < sequenceLength; i++)
         {
             ButtonPicker = Random.Range(0, 6);
 
-            yield return new WaitForSeconds(2.0f);
+            
             switch (ButtonPicker)
             {
                 case 0: DialogueUI.text = "Appuyez sur le bouton rouge !"; yield return new WaitUntil(() => Button1); break;
@@ -159,13 +161,13 @@ public class RandomEvents : MonoBehaviour
 
     IEnumerator RepairLeft()
     {
+        yield return new WaitForSeconds(2.0f);
         sequenceLength = Random.Range(3, 10);
 
         for (int i = 0; i < sequenceLength; i++)
         {
             ButtonPicker = Random.Range(0, 6);
 
-            yield return new WaitForSeconds(2.0f);
             switch (ButtonPicker)
             {
                 case 0: DialogueUI.text = "Appuyez sur le bouton rouge !"; yield return new WaitUntil(() => Button1); break;

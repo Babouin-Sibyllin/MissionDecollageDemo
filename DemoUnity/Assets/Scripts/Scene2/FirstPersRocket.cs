@@ -57,16 +57,43 @@ public class FirstPersRocket : MonoBehaviour
     public RandomEvents RandomEvents;
 
     // ======================
+    //         AUDIO
+    // ======================
+    [Header("Audio")]
+    public AudioSource spaceAmbience;
+
+    [Header("Propulseur Audio")]
+    public AudioSource propulseurStart; // ignition one-shot
+    public AudioSource propulseurLoop;  // looping thrust sound
+
+    // --- thresholds ---
+    public float mainIgnitionThreshold = 0.05f;
+    public float sideIgnitionThreshold = 0.03f;
+
+    // --- reactor states ---
+    bool mainActive;
+    bool leftActive;
+    bool rightActive;
+
+    bool isPropulseurActive = false;
+
+    // ======================
     //        START
     // ======================
     void Start()
     {
         StartCoroutine(FadeToTransparent());
 
-        // --- OSC BINDINGS ---
         oscReceiver.Bind("/faderGauche", OnFaderGauche);
         oscReceiver.Bind("/faderCentre", OnFaderCentre);
         oscReceiver.Bind("/faderDroit", OnFaderDroit);
+
+        // --- SPACE AMBIENCE ---
+        if (spaceAmbience != null && !spaceAmbience.isPlaying)
+        {
+            spaceAmbience.loop = true;
+            spaceAmbience.Play();
+        }
     }
 
     // ======================
@@ -94,36 +121,66 @@ public class FirstPersRocket : MonoBehaviour
     {
         float zValueRocket = RocketObject.transform.position.z;
         float zValueMars = MarsObject.transform.position.z;
-        float distanceRocketMars = (zValueRocket - zValueMars);
+        float distanceRocketMars = zValueRocket - zValueMars;
 
         // --- UI ---
         vitesseUI.text = "Vitesse actuelle: " + ReactorForce.ToString("F1");
         DistanceUI.text = "distance restante: " + (distanceRocketMars + 2000);
-
-        // --- ROTATION EASE ---
-        currentRotationSpeed = Mathf.Lerp(
-            currentRotationSpeed,
-            LeftReactorValue * 20,
-            rotationEaseSpeed * Time.deltaTime
-        );
-
-        currentRotationSpeed = Mathf.Lerp(
-            currentRotationSpeed,
-            -RightReactorValue * 20,
-            rotationEaseSpeed * Time.deltaTime
-        );
 
         // --- DAMAGE LOGIC ---
         MainReactorValue = DamagedMainReactor ? 0 : MainSlider.value;
         RightReactorValue = DamagedRightReactor ? 0 : RightSlider.value;
         LeftReactorValue = DamagedLeftReactor ? 0 : LeftSlider.value;
 
+        // --- ROTATION ---
+        currentRotationSpeed = Mathf.Lerp(
+            currentRotationSpeed,
+            LeftReactorValue * 20f - RightReactorValue * 20f,
+            rotationEaseSpeed * Time.deltaTime
+        );
+
         // --- FORCE ---
-        ReactorForce = (MainReactorValue + RightReactorValue + LeftReactorValue) * 40;
+        ReactorForce = (MainReactorValue + RightReactorValue + LeftReactorValue) * 40f;
 
         // --- MOVE ---
-        transform.Translate(Vector3.forward * ReactorForce * Time.deltaTime);
-        transform.Rotate(Vector3.up * currentRotationSpeed * Time.deltaTime);
+        transform.Translate(Vector3.forward * ReactorForce * Time.deltaTime, Space.Self);
+        transform.Rotate(Vector3.up * currentRotationSpeed * Time.deltaTime, Space.Self);
+
+        // ======================
+        //   REACTOR STATES
+        // ======================
+        mainActive  = MainReactorValue  > mainIgnitionThreshold;
+        leftActive  = LeftReactorValue  > sideIgnitionThreshold;
+        rightActive = RightReactorValue > sideIgnitionThreshold;
+
+        // ======================
+        //   PROPULSEUR AUDIO
+        // ======================
+        bool allReactorsActive = mainActive && leftActive && rightActive;
+
+        if (allReactorsActive)
+        {
+            if (!isPropulseurActive)
+            {
+                if (propulseurStart != null)
+                    propulseurStart.Play();
+
+                if (propulseurLoop != null && !propulseurLoop.isPlaying)
+                    propulseurLoop.Play();
+
+                isPropulseurActive = true;
+            }
+        }
+        else
+        {
+            if (isPropulseurActive)
+            {
+                if (propulseurLoop != null)
+                    propulseurLoop.Stop();
+
+                isPropulseurActive = false;
+            }
+        }
     }
 
     // ======================
@@ -132,6 +189,7 @@ public class FirstPersRocket : MonoBehaviour
     IEnumerator FadeToTransparent()
     {
         yield return new WaitForSeconds(2f);
+
         Color startColor = fadeImage.color;
         float t = 0f;
 
